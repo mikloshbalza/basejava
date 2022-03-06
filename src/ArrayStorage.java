@@ -6,7 +6,7 @@ public class ArrayStorage {
     int size; //вводим переменную для текущего размера(кол-ва резюме в базе)
 
     void clear() {
-        for (int i = 0; i <= size; i++) {
+        for (int i = 0; i < size; i++) {
             storage[i] = null;
         }
         size = 0;
@@ -22,31 +22,31 @@ public class ArrayStorage {
     }
 
     Resume get(String uuid) {
-        int i = 0;
-        while (storage[i] != null) {
+        for (int i = 0; i < size; i++) {
             if (storage[i].uuid.equals(uuid)) {
                 return storage[i];
             }
-            i++;
         }
         return null;
     }
 
     void delete(String uuid) {
-        int i = 0;
-        boolean found = false;
-        while (i < size) {
-            if (storage[i].uuid.equals(uuid)) {
-                found = true;
+        for (int i = 0; i < size; i++) {
+            if (i == size - 1) {
+                storage[i] = null;
+                size--;
+            } else {
+                if (storage[i].uuid.equals(uuid)) {
+                    for (int j = i; j < size; j++) {
+                        storage[j] = storage[j + 1];
+                    }
+                    size--;
+                    break;
+                }
             }
-            if (found) {
-                storage[i] = storage[i + 1];
-            }
-            i++;
+
         }
-        if (found) {
-            size--;
-        }
+
     }
 
     /**
