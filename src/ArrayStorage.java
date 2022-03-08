@@ -3,7 +3,7 @@
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
-    int size; //вводим переменную для текущего размера(кол-ва резюме в базе)
+    int size; // количество резюме в массиве
 
     void clear() {
         for (int i = 0; i < size; i++) {
@@ -14,7 +14,7 @@ public class ArrayStorage {
 
     void save(Resume r) {
         if (get(r.uuid) == null) {
-            storage[size()] = r;
+            storage[size] = r;
             size++;
         } else {
             System.out.println("Резюме с uuid = " + r.uuid + "уже существует.");
@@ -32,19 +32,16 @@ public class ArrayStorage {
 
     void delete(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (i == size - 1) {
+            if (storage[i].uuid.equals(uuid) && i == size - 1) {
                 storage[i] = null;
                 size--;
-            } else {
-                if (storage[i].uuid.equals(uuid)) {
-                    for (int j = i; j < size; j++) {
-                        storage[j] = storage[j + 1];
-                    }
-                    size--;
-                    break;
+            } else if (storage[i].uuid.equals(uuid)) {
+                for (int j = i; j < size - 1; j++) {
+                    storage[j] = storage[j + 1];
                 }
+                size--;
+                break;
             }
-
         }
 
     }
