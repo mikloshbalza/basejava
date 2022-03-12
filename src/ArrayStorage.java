@@ -2,45 +2,39 @@
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
-    int size; // количество резюме в массиве
+    private Resume[] storage = new Resume[10000];
+    private int size; // количество резюме в массиве
 
-    void clear() {
+    public void clear() {
         for (int i = 0; i < size; i++) {
             storage[i] = null;
         }
         size = 0;
     }
 
-    void save(Resume r) {
-        if (get(r.uuid) == null) {
+    public void save(Resume r) {
+        if (get(r.getUuid()) == null) {
             storage[size] = r;
             size++;
         } else {
-            System.out.println("Резюме с uuid = " + r.uuid + "уже существует.");
+            System.out.println("Резюме с uuid = " + r.getUuid() + "уже существует.");
         }
     }
 
-    Resume get(String uuid) {
+    public Resume get(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].uuid.equals(uuid)) {
+            if (storage[i].getUuid().equals(uuid)) {
                 return storage[i];
             }
         }
         return null;
     }
 
-    void delete(String uuid) {
+    public void delete(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].uuid.equals(uuid) && i == size - 1) {
-                storage[i] = null;
+            if (storage[i].getUuid().equals(uuid)) {
+                storage[i] = storage[size - 1];
                 size--;
-            } else if (storage[i].uuid.equals(uuid)) {
-                for (int j = i; j < size - 1; j++) {
-                    storage[j] = storage[j + 1];
-                }
-                size--;
-                break;
             }
         }
 
@@ -49,7 +43,7 @@ public class ArrayStorage {
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    Resume[] getAll() {
+    public Resume[] getAll() {
         Resume[] all = new Resume[size];
 
         for (int i = 0; i < size; i++) {
@@ -58,7 +52,7 @@ public class ArrayStorage {
         return all;
     }
 
-    int size() {
+    public int size() {
         return size;
     }
 }
