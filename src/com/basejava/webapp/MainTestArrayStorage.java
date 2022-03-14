@@ -1,10 +1,17 @@
+package com.basejava.webapp;
+
+import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.storage.ArrayStorage;
+
+import java.io.IOException;
+
 /**
- * Test for your ArrayStorage implementation
+ * Test for your com.basejava.webapp.storage.ArrayStorage implementation
  */
 public class MainTestArrayStorage {
     static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Resume r1 = new Resume();
         r1.setUuid("uuid1");
         Resume r2 = new Resume();
@@ -24,10 +31,13 @@ public class MainTestArrayStorage {
         printAll();
         ARRAY_STORAGE.delete(r1.getUuid());
         printAll();
+        ARRAY_STORAGE.update(r3);
+        printAll();
         ARRAY_STORAGE.clear();
         printAll();
 
         System.out.println("Size: " + ARRAY_STORAGE.size());
+
     }
 
     static void printAll() {
