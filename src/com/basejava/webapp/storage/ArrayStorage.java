@@ -17,31 +17,34 @@ public class ArrayStorage {
     }
 
     public void save(Resume r) {
-        if (size < storage.length) { //save на переполнение storage
-            if (!existence(r.getUuid())) { //save на отсутствие резюме в storage
+        String uuid = r.getUuid();
+        if (size < storage.length) { //проверка на переполнение
+            if (!doExist(uuid)) { //проверка на наличие резюме в storage
                 storage[size] = r;
                 size++;
-            } else System.out.println("Резюме с id: " + r.getUuid() + " уже существует.");
+            } else System.out.println("Резюме с id: " + uuid + " уже существует.");
         } else System.out.println("Достигнуто максимальное количество резюме в базе. Сохранение невозможно.");
     }
 
     public void update(Resume r) {
-        if (existence(r.getUuid())) {
-            storage[searchResume(r.getUuid())] = r;
-        } else System.out.println("Резюме с id: " + r.getUuid() + " не найдено.");
+        String uuid = r.getUuid();
+        if (doExist(uuid)) {
+            storage[findIndex(uuid)] = r;
+        } else System.out.println("Резюме с id: " + uuid + " не найдено.");
     }
 
     public Resume get(String uuid) {
-        if (existence(uuid)) {
-            return storage[searchResume(uuid)];
+        if (doExist(uuid)) {
+            return storage[findIndex(uuid)];
         } else System.out.println("Резюме с id: " + uuid + " не найдено.");
 
         return null;
     }
 
     public void delete(String uuid) {
-        if (existence(uuid)) {
-            storage[searchResume(uuid)] = storage[size - 1];
+        if (doExist(uuid)) {
+            storage[findIndex(uuid)] = storage[size - 1];
+            storage[size - 1] = null;
             size--;
         } else System.out.println("Резюме с id: " + uuid + " не найдено.");
     }
@@ -57,16 +60,16 @@ public class ArrayStorage {
         return size;
     }
 
-    Integer searchResume(String uuid) {
+    private int findIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
             }
         }
-        return null;
+        return -1;
     }
 
-    boolean existence(String uuid) {
-        return searchResume(uuid) != null;
+    private boolean doExist(String uuid) {
+        return findIndex(uuid) >= 0;
     }
 }
