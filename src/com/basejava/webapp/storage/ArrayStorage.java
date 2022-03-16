@@ -19,7 +19,7 @@ public class ArrayStorage {
     public void save(Resume r) {
         String uuid = r.getUuid();
         if (size < storage.length) { //проверка на переполнение
-            if (!doExist(uuid)) { //проверка на наличие резюме в storage
+            if (!isExist(findIndex(uuid))) { //проверка на наличие резюме в storage
                 storage[size] = r;
                 size++;
             } else System.out.println("Резюме с id: " + uuid + " уже существует.");
@@ -28,22 +28,25 @@ public class ArrayStorage {
 
     public void update(Resume r) {
         String uuid = r.getUuid();
-        if (doExist(uuid)) {
-            storage[findIndex(uuid)] = r;
+        int index = findIndex(uuid);
+        if (isExist(index)) {
+            storage[index] = r;
         } else System.out.println("Резюме с id: " + uuid + " не найдено.");
     }
 
     public Resume get(String uuid) {
-        if (doExist(uuid)) {
-            return storage[findIndex(uuid)];
-        } else System.out.println("Резюме с id: " + uuid + " не найдено.");
-
+        int index = findIndex(uuid);
+        if (isExist(index)) {
+            return storage[index];
+        }
+        System.out.println("Резюме с id: " + uuid + " не найдено.");
         return null;
     }
 
     public void delete(String uuid) {
-        if (doExist(uuid)) {
-            storage[findIndex(uuid)] = storage[size - 1];
+        int index = findIndex(uuid);
+        if (isExist(index)) {
+            storage[index] = storage[size - 1];
             storage[size - 1] = null;
             size--;
         } else System.out.println("Резюме с id: " + uuid + " не найдено.");
@@ -69,7 +72,7 @@ public class ArrayStorage {
         return -1;
     }
 
-    private boolean doExist(String uuid) {
-        return findIndex(uuid) >= 0;
+    private boolean isExist(int index) {
+        return index >= 0;
     }
 }
