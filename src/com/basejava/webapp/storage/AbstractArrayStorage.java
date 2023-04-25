@@ -23,11 +23,11 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public void save(Resume r) {
         int index = findIndex(r.getUuid());
-        if (size < STORAGE_LIMIT) { //проверка на переполнение
-            if (!isExist(index)) { //проверка на наличие резюме в storage
+        if (size < STORAGE_LIMIT) { //overflow check
+            if (!isExist(index)) { //check if resume present in storage
                 insertResume(r, index);
                 size++;
-            } else System.out.println("Резюме с id: " + r.getUuid() + " уже существует.");
+            } else throw new ExistStorageException(r.getUuid());
         } else throw new StorageException("Storage overflow", r.getUuid());
     }
 
@@ -37,7 +37,7 @@ public abstract class AbstractArrayStorage implements Storage {
             fillDeletedElement(index);
             storage[size - 1] = null;
             size--;
-        } else throw new ExistStorageException(uuid);
+        } else throw new NotExistStorageException(uuid);
     }
 
 
