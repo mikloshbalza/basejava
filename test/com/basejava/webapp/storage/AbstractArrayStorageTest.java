@@ -12,20 +12,25 @@ import static com.basejava.webapp.storage.AbstractArrayStorage.STORAGE_LIMIT;
 
 public abstract class AbstractArrayStorageTest {
     private final Storage storage;
-    static final String UUID_1 = "1";
-    static final String UUID_2 = "2";
-    static final String UUID_3 = "3";
-    static final String UUID_4 = "4";
-    static final String UUID_5 = "5";
-    static final Resume RESUME_1 = new Resume(UUID_1);
-    static final Resume RESUME_2 = new Resume(UUID_2);
-    static final Resume RESUME_3 = new Resume(UUID_3);
+    private static final String UUID_1 = "1";
+    private static final String UUID_2 = "2";
+    private static final String UUID_3 = "3";
+    private static final String UUID_4 = "4";
+    private static final String UUID_5 = "5";
+    private static final Resume RESUME_1;
+    private static final Resume RESUME_2;
+    private static final Resume RESUME_3;
+    private static final Resume RESUME_4;
+    private static final String UUID_NOT_EXIST = "dummy";
 
-    static final String UUID_NOT_EXIST = "dummy";
+    static {
+        RESUME_1 = new Resume(UUID_1);
+        RESUME_2 = new Resume(UUID_2);
+        RESUME_3 = new Resume(UUID_3);
+        RESUME_4 = new Resume(UUID_4);
+    }
 
-    static final Resume RESUME_4 = new Resume(UUID_4);
-
-    public AbstractArrayStorageTest(Storage storage) {
+    protected AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
     }
 
