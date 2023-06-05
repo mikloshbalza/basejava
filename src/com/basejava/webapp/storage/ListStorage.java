@@ -10,30 +10,32 @@ public class ListStorage extends AbstractStorage {
     protected List<Resume> storage = new ArrayList<>();
 
     @Override
-    public void save(Resume r) {
-        if (storage.contains(r)) {
-            throw new ExistStorageException(r.getUuid());
-        } else {
-            storage.add(r);
-        }
+    protected Object getSearchKey(String uuid) {
+        return new Resume(uuid);
     }
 
     @Override
-    public void update(Resume r) {
-        if (!storage.contains(r)) {
-            throw new NotExistStorageException(r.getUuid());
-        } else {
-            storage.set(storage.indexOf(r), r);
-        }
+    protected boolean isExist(Object searchKey) {
+        return storage.contains((Resume) searchKey);
     }
 
     @Override
-    public Resume get(String uuid) {
-        Resume r = new Resume(uuid);
-        if (!storage.contains(r)) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            return storage.get(storage.indexOf(r));
-        }
+    protected void doSave(Resume r, Object searchKey) {
+        storage.add((Resume) searchKey);
+    }
+
+    @Override
+    protected Resume doGet(Object searchKey) {
+        return storage.get(storage.indexOf(searchKey));
+    }
+
+    @Override
+    protected void doUpdate(Resume r, Object searchKey) {
+        storage.set(storage.indexOf((Resume) searchKey), (Resume) searchKey);
+    }
+
+    @Override
+    protected void doDelete(Object searchKey) {
+        storage.remove((Resume) searchKey);
     }
 }

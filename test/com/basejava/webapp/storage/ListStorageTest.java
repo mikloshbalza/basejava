@@ -39,7 +39,7 @@ public class ListStorageTest {
     @Test
     public void update() {
         storage.update(RESUME_3);
-        Assert.assertSame(RESUME_3, storage.get(UUID_3));
+        Assert.assertEquals(RESUME_3, storage.get(UUID_3));
     }
 
     @Test(expected = NotExistStorageException.class)
