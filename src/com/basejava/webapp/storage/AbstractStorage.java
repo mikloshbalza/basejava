@@ -7,12 +7,7 @@ import com.basejava.webapp.model.Resume;
 import java.util.Collection;
 
 public abstract class AbstractStorage implements Storage {
-    protected Collection<Resume> storage;
-
-    @Override
-    public void clear() {
-        storage.clear();
-    }
+    //protected Collection<Resume> storage;
 
     @Override
     public void save(Resume r) {
@@ -35,18 +30,8 @@ public abstract class AbstractStorage implements Storage {
         doDelete(getExistingSearchKey(uuid));
     }
 
-    @Override
-    public Resume[] getAll() {
-        return storage.toArray(new Resume[0]);
-    }
 
-    @Override
-    public int size() {
-        return storage.size();
-    }
-
-
-    public Object getExistingSearchKey(String uuid){
+    public Object getExistingSearchKey(String uuid) {
         Object searchKey = getSearchKey(uuid);
         if (!isExist(searchKey)) {
             throw new NotExistStorageException("Resume with uuid: " + uuid + " doesn't exist.");
@@ -55,7 +40,8 @@ public abstract class AbstractStorage implements Storage {
         }
 
     }
-    public Object getNotExistingSearchKey(String uuid){
+
+    public Object getNotExistingSearchKey(String uuid) {
         Object searchKey = getSearchKey(uuid);
         if (isExist(searchKey)) {
             throw new ExistStorageException("Resume with uuid: " + uuid + " already exist.");
@@ -63,10 +49,22 @@ public abstract class AbstractStorage implements Storage {
             return searchKey;
         }
     }
+
     protected abstract Object getSearchKey(String uuid);
+
     protected abstract boolean isExist(Object searchKey);
+
     protected abstract void doSave(Resume r, Object searchKey);
+
     protected abstract Resume doGet(Object searchKey);
+
     protected abstract void doUpdate(Resume r, Object searchKey);
+
     protected abstract void doDelete(Object searchKey);
+
+    public abstract void clear();
+
+    public abstract Resume[] getAll();
+
+    public abstract int size();
 }
