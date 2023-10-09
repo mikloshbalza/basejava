@@ -1,7 +1,5 @@
 package com.basejava.webapp.storage;
 
-import com.basejava.webapp.exception.ExistStorageException;
-import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
 import java.util.*;
@@ -41,7 +39,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void doDelete(Object searchKey) {
-        storage.remove((Resume) searchKey);
+        storage.remove(((Integer) searchKey).intValue());
     }
 
     @Override
@@ -49,9 +47,12 @@ public class ListStorage extends AbstractStorage {
         storage.clear();
     }
 
-    public Resume[] getAll() {
-        return storage.toArray(new Resume[0]);
+    @Override
+    public List<Resume> getAllSorted() {
+        Collections.sort(storage, RESUME_COMPARATOR);
+        return storage;
     }
+
 
     @Override
     public int size() {

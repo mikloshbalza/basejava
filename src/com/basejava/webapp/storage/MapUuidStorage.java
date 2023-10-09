@@ -2,17 +2,15 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.model.Resume;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
-public class MapStorage extends AbstractStorage {
+public class MapUuidStorage extends AbstractStorage {
     protected Map<String, Resume> storage = new HashMap<>();
 
     @Override
     protected Object getSearchKey(String uuid) {
         for (Map.Entry<String, Resume> entry : storage.entrySet()) {
-            if (Objects.equals(entry.getKey(),uuid)) {
+            if (Objects.equals(entry.getKey(), uuid)) {
                 return entry.getKey();
             }
         }
@@ -50,9 +48,12 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume[] getAll() {
-        return storage.values().toArray(new Resume[0]);
+    public List<Resume> getAllSorted() {
+        List<Resume> values = new ArrayList<>(storage.values());
+        Collections.sort(values, RESUME_COMPARATOR);
+        return values;
     }
+
 
     @Override
     public int size() {
