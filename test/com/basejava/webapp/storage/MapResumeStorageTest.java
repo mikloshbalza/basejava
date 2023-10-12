@@ -4,11 +4,9 @@ import com.basejava.webapp.model.Resume;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
-public class MapFullNameStorageTest extends AbstractStorageTest {
-    public MapFullNameStorageTest() {
-        super(new MapFullNameStorage());
+public class MapResumeStorageTest extends AbstractStorageTest {
+    public MapResumeStorageTest() {
+        super(new MapResumeStorage());
     }
 
     @Override

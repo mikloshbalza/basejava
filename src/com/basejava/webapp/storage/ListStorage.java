@@ -43,14 +43,13 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void clear() {
-        storage.clear();
+    protected List<Resume> doCopyAll() {
+        return storage;
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        Collections.sort(storage, RESUME_COMPARATOR);
-        return storage;
+    public void clear() {
+        storage.clear();
     }
 
 
