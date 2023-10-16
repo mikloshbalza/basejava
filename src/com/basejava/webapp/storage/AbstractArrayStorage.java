@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Array based storage for Resumes
  */
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_LIMIT = 10000;
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -23,15 +23,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return size;
     }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
-
-    @Override
-    protected List<Resume> doCopyAll() {
-        return new ArrayList<>(Arrays.asList(Arrays.copyOf(storage, size)));
-    }
-
     protected abstract void fillDeletedElement(int index);
 
     protected abstract void insertResume(Resume r, int index);
@@ -39,36 +30,41 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected abstract int getIndex(String uuid);
 
     @Override
-    protected Object getSearchKey(String uuid) {
+    protected List<Resume> doCopyAll() {
+        return new ArrayList<>(Arrays.asList(Arrays.copyOf(storage, size)));
+    }
+
+    @Override
+    protected Integer getSearchKey(String uuid) {
         return getIndex(uuid);
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return (int) searchKey >= 0;
+    protected boolean isExist(Integer searchKey) {
+        return searchKey >= 0;
     }
 
     @Override
-    protected void doSave(Resume r, Object searchKey) {
+    protected void doSave(Resume r, Integer searchKey) {
         if (size < STORAGE_LIMIT) { //overflow check
-            insertResume(r, (int) searchKey);
+            insertResume(r, searchKey);
             size++;
         } else throw new StorageException("Storage overflow", r.getUuid());
     }
 
     @Override
-    protected Resume doGet(Object searchKey) {
-        return storage[(int) searchKey];
+    protected Resume doGet(Integer searchKey) {
+        return storage[searchKey];
     }
 
     @Override
-    protected void doUpdate(Resume r, Object searchKey) {
-        storage[(int) searchKey] = r;
+    protected void doUpdate(Resume r, Integer searchKey) {
+        storage[searchKey] = r;
     }
 
     @Override
-    protected void doDelete(Object searchKey) {
-        fillDeletedElement((int) searchKey);
+    protected void doDelete(Integer searchKey) {
+        fillDeletedElement(searchKey);
         storage[size - 1] = null;
         size--;
     }

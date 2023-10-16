@@ -9,10 +9,24 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public abstract class AbstractStorage implements Storage {
+public abstract class AbstractStorage<SK> implements Storage {
 
     protected static final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid);
 
+
+    protected abstract SK getSearchKey(String uuid);
+
+    protected abstract boolean isExist(SK searchKey);
+
+    protected abstract void doSave(Resume r, SK searchKey);
+
+    protected abstract Resume doGet(SK searchKey);
+
+    protected abstract void doUpdate(Resume r, SK searchKey);
+
+    protected abstract void doDelete(SK searchKey);
+
+    protected abstract List<Resume> doCopyAll();
 
     @Override
     public void save(Resume r) {
@@ -36,8 +50,8 @@ public abstract class AbstractStorage implements Storage {
     }
 
 
-    protected Object getExistingSearchKey(String uuid) {
-        Object searchKey = getSearchKey(uuid);
+    protected SK getExistingSearchKey(String uuid) {
+        SK searchKey = getSearchKey(uuid);
         if (!isExist(searchKey)) {
             throw new NotExistStorageException("Resume with uuid: " + uuid + " doesn't exist.");
         } else {
@@ -46,8 +60,8 @@ public abstract class AbstractStorage implements Storage {
 
     }
 
-    protected Object getNotExistingSearchKey(String uuid) {
-        Object searchKey = getSearchKey(uuid);
+    protected SK getNotExistingSearchKey(String uuid) {
+        SK searchKey = getSearchKey(uuid);
         if (isExist(searchKey)) {
             throw new ExistStorageException("Resume with uuid: " + uuid + " already exist.");
         } else {
@@ -61,18 +75,4 @@ public abstract class AbstractStorage implements Storage {
         list.sort(RESUME_COMPARATOR);
         return list;
     }
-
-    protected abstract Object getSearchKey(String uuid);
-
-    protected abstract boolean isExist(Object searchKey);
-
-    protected abstract void doSave(Resume r, Object searchKey);
-
-    protected abstract Resume doGet(Object searchKey);
-
-    protected abstract void doUpdate(Resume r, Object searchKey);
-
-    protected abstract void doDelete(Object searchKey);
-
-    protected abstract List<Resume> doCopyAll();
 }
