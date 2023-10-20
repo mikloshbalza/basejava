@@ -1,17 +1,17 @@
 package com.basejava.webapp.model;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 
-public class CompanySection extends AbstractSection{
-    private final Map<Company,Period> companies;
+public class CompanySection extends AbstractSection {
+    private final List<Company> companies;
 
-    public CompanySection(Map<Company, Period> companies) {
-        Objects.requireNonNull(companies,"object must not be null");
+    public CompanySection(List<Company> companies) {
+        Objects.requireNonNull(companies, "object must not be null");
         this.companies = companies;
     }
 
-    public Map<Company, Period> getCompanies() {
+    public List<Company> getCompanies() {
         return companies;
     }
 
