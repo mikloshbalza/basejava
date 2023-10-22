@@ -10,11 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractFileStorage extends AbstractStorage<File> {
-    private File directory;
-
-    protected abstract void doWrite(Resume r, File file) throws IOException;
-
-    protected abstract Resume doRead(File file);
+    private final File directory;
 
     protected AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must not be null");
@@ -49,7 +45,11 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected Resume doGet(File file) {
-        return doRead(file);
+        try {
+            return doRead(file);
+        } catch (IOException e) {
+            throw new StorageException("IO error",file.getName(), e);
+        }
     }
 
     @Override
@@ -63,16 +63,25 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doDelete(File file) {
-        file.delete();
+        if (!file.delete())
+            throw new StorageException("File was not deleted",file.getName());
+
     }
 
     @Override
     protected List<Resume> doCopyAll() {
         File[] files = directory.listFiles();
         List<Resume> list = new ArrayList<>();
+        if (files != null){
         for (File file :
                 files) {
-            list.add(doRead(file));
+            try {
+                list.add(doRead(file));
+            } catch (IOException e) {
+                throw new StorageException("IO error", file.getName(), e);
+            }
+        }} else {
+            throw new StorageException("File must not be null", directory.getName());
         }
         return list;
     }
@@ -80,15 +89,27 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     public void clear() {
         File[] files = directory.listFiles();
+        if (files != null){
         for (File file :
                 files) {
             file.delete();
+        }} else {
+            throw new StorageException("File must not be null", directory.getName());
         }
+
     }
 
     @Override
     public int size() {
         File[] files = directory.listFiles();
-        return files.length;
+        if (files != null) {
+            return files.length;
+        } else {
+            throw new StorageException("File must not be null", directory.getName());
+        }
     }
+
+    protected abstract void doWrite(Resume r, File file) throws IOException;
+
+    protected abstract Resume doRead(File file) throws IOException;
 }
