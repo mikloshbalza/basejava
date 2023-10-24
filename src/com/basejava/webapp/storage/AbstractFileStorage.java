@@ -48,7 +48,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             return doRead(file);
         } catch (IOException e) {
-            throw new StorageException("IO error",file.getName(), e);
+            throw new StorageException("IO error", file.getName(), e);
         }
     }
 
@@ -63,8 +63,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doDelete(File file) {
-        if (!file.delete())
-            throw new StorageException("File was not deleted",file.getName());
+        if (!file.delete()) {
+            throw new StorageException("File was not deleted", file.getName());
+        }
 
     }
 
@@ -72,15 +73,12 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected List<Resume> doCopyAll() {
         File[] files = directory.listFiles();
         List<Resume> list = new ArrayList<>();
-        if (files != null){
-        for (File file :
-                files) {
-            try {
-                list.add(doRead(file));
-            } catch (IOException e) {
-                throw new StorageException("IO error", file.getName(), e);
+        if (files != null) {
+            for (File file :
+                    files) {
+                list.add(doGet(file));
             }
-        }} else {
+        } else {
             throw new StorageException("File must not be null", directory.getName());
         }
         return list;
@@ -89,11 +87,12 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     public void clear() {
         File[] files = directory.listFiles();
-        if (files != null){
-        for (File file :
-                files) {
-            file.delete();
-        }} else {
+        if (files != null) {
+            for (File file :
+                    files) {
+                doDelete(file);
+            }
+        } else {
             throw new StorageException("File must not be null", directory.getName());
         }
 
