@@ -1,10 +1,12 @@
 package com.basejava.webapp.model;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 
-public class Company {
+public class Company implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final String url;
     private final String name;
     private final List<Period> periods;
