@@ -30,24 +30,24 @@ public class MainFile {
 //        } catch (IOException e){
 //            throw new RuntimeException(e);
 //        }
-        File dir2 = new File("C:\\Users\\tkach\\Desktop\\java\\startjava\\basejava");
+        File dir2 = new File(".");
         try {
-            searchFile(dir2);
+            searchFile(dir2, "");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void searchFile(File dir) throws IOException {
+    public static void searchFile(File dir, String indent) throws IOException {
         File[] files = dir.listFiles();
         if (files != null) {
             for (File file :
                     files) {
                 if (file.isDirectory()) {
-                    System.out.println("┌─" + file.getName());
-                    searchFile(file);
-                } else if (file.isFile()){
-                    System.out.println("+---" + file.getName());
+                    System.out.println(indent + file.getName());
+                    searchFile(file, indent + "  ");
+                } else if (file.isFile()) {
+                    System.out.println(indent + file.getName());
                 }
 
             }
