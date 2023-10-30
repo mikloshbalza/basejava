@@ -23,6 +23,10 @@ public class ListSection extends AbstractSection {
         this.list = list;
     }
 
+    public List<String> getList() {
+        return list;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
