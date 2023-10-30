@@ -1,5 +1,6 @@
 package com.basejava.webapp.storage;
 
+import com.basejava.webapp.storage.serializtion.JsonStreamSerializer;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -11,7 +12,9 @@ import org.junit.runners.Suite;
         MapUuidStorageTest.class,
         MapResumeStorageTest.class,
         ObjectFileStorageTest.class,
-        ObjectPathStorageTest.class
+        ObjectPathStorageTest.class,
+        XmlPathStorageTest.class,
+        JsonPathStorageTest.class
 })
 public class AllStorageTest {
 }

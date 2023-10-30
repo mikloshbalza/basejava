@@ -1,12 +1,20 @@
 package com.basejava.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class CompanySection extends AbstractSection {
     private static final long serialVersionUID = 1L;
-    private final List<Company> companies;
+    private List<Company> companies;
 
+    public CompanySection() {
+    }
+    public CompanySection(Company... companies){
+        this(Arrays.asList(companies));
+    }
     public CompanySection(List<Company> companies) {
         Objects.requireNonNull(companies, "object must not be null");
         this.companies = companies;

@@ -2,14 +2,14 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
-import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.model.ResumeTestData;
+import com.basejava.webapp.model.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 
 import java.io.File;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +33,34 @@ public abstract class AbstractStorageTest {
     private static final String UUID_NOT_EXIST = "dummy";
 
     static {
-        RESUME_1 = ResumeTestData.fillResume(UUID_1, FULL_NAME_1);
-        RESUME_2 = ResumeTestData.fillResume(UUID_2, FULL_NAME_2);
-        RESUME_3 = ResumeTestData.fillResume(UUID_3, FULL_NAME_3);
-        RESUME_4 = ResumeTestData.fillResume(UUID_4, FULL_NAME_4);
+        RESUME_1 = new Resume(UUID_1, FULL_NAME_1);
+        RESUME_2 = new Resume(UUID_2, FULL_NAME_2);
+        RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
+        RESUME_4 = new Resume(UUID_4, FULL_NAME_4);
 
+        RESUME_1.addContact(ContactType.EMAIL, "mail1@ya.ru");
+        RESUME_1.addContact(ContactType.NUMBER, "11111");
+//        RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
+//        RESUME_1.addSection(SectionType.PERSONAL, new TextSection("Personal data"));
+//        RESUME_1.addSection(SectionType.ACHIEVEMENT, new ListSection("Achivement1", "Achivement12", "Achivement13"));
+//        RESUME_1.addSection(SectionType.QUALIFICATIONS, new ListSection("Java", "SQL", "JavaScript"));
+//        RESUME_1.addSection(SectionType.EXPERIENCE,
+//                new CompanySection(
+//                        new Company("http://Organization11.ru", "Organization11",
+//                                new Period("position1", "content1", 2005, Month.JANUARY),
+//                                new Period("position2", "content2", 2001, Month.MARCH, 2005, Month.JANUARY))));
+//        RESUME_1.addSection(SectionType.EDUCATION,
+//                new CompanySection(
+//                        new Company("http://institute.ru", "Institute",
+//                                new Period("aspirant", "description-aspirant", 1996, Month.JANUARY, 2000, Month.DECEMBER),
+//                                new Period("student", "IT facultet", 2001, Month.MARCH, 2005, Month.JANUARY))
+//                ));
+//        RESUME_2.addContact(ContactType.SKYPE,"skype2");
+//        RESUME_2.addContact(ContactType.NUMBER, "22222");
+//        RESUME_1.addSection(SectionType.EXPERIENCE,
+//                new CompanySection(
+//                        new Company("http://company2.ru","Company2",
+//                                new Period("position1","content1",2015,Month.JANUARY))));
     }
 
     protected AbstractStorageTest(Storage storage) {

@@ -1,16 +1,26 @@
 package com.basejava.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Company implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final String url;
-    private final String name;
-    private final List<Period> periods;
+    private String url;
+    private String name;
+    private List<Period> periods;
 
+    public Company() {
+    }
+
+    public Company(String url, String name,Period... periods){
+        this(url, name, Arrays.asList(periods));
+    }
     public Company(String url, String name, List<Period> periods) {
         Objects.requireNonNull(url, "url must not be null");
         Objects.requireNonNull(name, "name must not be null");
