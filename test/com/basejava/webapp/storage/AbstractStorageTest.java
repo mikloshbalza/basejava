@@ -40,27 +40,27 @@ public abstract class AbstractStorageTest {
 
         RESUME_1.addContact(ContactType.EMAIL, "mail1@ya.ru");
         RESUME_1.addContact(ContactType.NUMBER, "11111");
-//        RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
-//        RESUME_1.addSection(SectionType.PERSONAL, new TextSection("Personal data"));
-//        RESUME_1.addSection(SectionType.ACHIEVEMENT, new ListSection("Achivement1", "Achivement12", "Achivement13"));
-//        RESUME_1.addSection(SectionType.QUALIFICATIONS, new ListSection("Java", "SQL", "JavaScript"));
-//        RESUME_1.addSection(SectionType.EXPERIENCE,
-//                new CompanySection(
-//                        new Company("http://Organization11.ru", "Organization11",
-//                                new Period("position1", "content1", 2005, Month.JANUARY),
-//                                new Period("position2", "content2", 2001, Month.MARCH, 2005, Month.JANUARY))));
-//        RESUME_1.addSection(SectionType.EDUCATION,
-//                new CompanySection(
-//                        new Company("http://institute.ru", "Institute",
-//                                new Period("aspirant", "description-aspirant", 1996, Month.JANUARY, 2000, Month.DECEMBER),
-//                                new Period("student", "IT facultet", 2001, Month.MARCH, 2005, Month.JANUARY))
-//                ));
-//        RESUME_2.addContact(ContactType.SKYPE,"skype2");
-//        RESUME_2.addContact(ContactType.NUMBER, "22222");
-//        RESUME_1.addSection(SectionType.EXPERIENCE,
-//                new CompanySection(
-//                        new Company("http://company2.ru","Company2",
-//                                new Period("position1","content1",2015,Month.JANUARY))));
+        RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
+        RESUME_1.addSection(SectionType.PERSONAL, new TextSection("Personal data"));
+        RESUME_1.addSection(SectionType.ACHIEVEMENT, new ListSection("Achivement1", "Achivement12", "Achivement13"));
+        RESUME_1.addSection(SectionType.QUALIFICATIONS, new ListSection("Java", "SQL", "JavaScript"));
+        RESUME_1.addSection(SectionType.EXPERIENCE,
+                new CompanySection(
+                        new Company("http://Organization11.ru", "Organization11",
+                                new Period("position1", "content1", 2005, Month.JANUARY),
+                                new Period("position2", "content2", 2001, Month.MARCH, 2005, Month.JANUARY))));
+        RESUME_1.addSection(SectionType.EDUCATION,
+                new CompanySection(
+                        new Company("http://institute.ru", "Institute",
+                                new Period("aspirant", "description-aspirant", 1996, Month.JANUARY, 2000, Month.DECEMBER),
+                                new Period("student", "IT facultet", 2001, Month.MARCH, 2005, Month.JANUARY))
+                ));
+        RESUME_2.addContact(ContactType.SKYPE,"skype2");
+        RESUME_2.addContact(ContactType.NUMBER, "22222");
+        RESUME_1.addSection(SectionType.EXPERIENCE,
+                new CompanySection(
+                        new Company("http://company2.ru","Company2",
+                                new Period("position1","content1",2015,Month.JANUARY))));
     }
 
     protected AbstractStorageTest(Storage storage) {

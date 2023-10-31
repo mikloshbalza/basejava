@@ -1,9 +1,10 @@
 package com.basejava.webapp.storage.serializtion;
 
-import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.*;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -33,34 +34,33 @@ public class DataStreamSerializer implements StreamSerializer {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                       List<String> listSection = ((ListSection) section).getList();
-                        for (String item :
-                                listSection) {
-                            dos.writeUTF(item);
-                        }
+                        writeCollection(dos, ((ListSection) section).getList(), dos::writeUTF);
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        List<Company> companies = ((CompanySection) section).getCompanies();
-                        for (Company company :
-                                companies) {
+                        writeCollection(dos, ((CompanySection) section).getCompanies(), company -> {
                             dos.writeUTF(company.getUrl());
                             dos.writeUTF(company.getName());
-                            List<Period> periods = company.getPeriods();
-                            for (Period period :
-                                    periods) {
+                            writeCollection(dos, company.getPeriods(), period -> {
                                 dos.writeUTF(period.getName());
                                 dos.writeUTF(period.getDescription());
-                                dos.writeInt(period.getStartDate().getYear());
-                                dos.writeInt(period.getStartDate().getMonth().getValue());
-                                dos.writeInt(period.getEndDate().getYear());
-                                dos.writeInt(period.getEndDate().getMonth().getValue());
-                            }
-                        }
+                                writeLocalDate(dos, period.getStartDate());
+                                writeLocalDate(dos, period.getEndDate());
+                            });
+                        });
                         break;
                 }
             }
         }
+    }
+
+    private void writeLocalDate(DataOutputStream dos, LocalDate localDate) throws IOException {
+        dos.writeInt(localDate.getYear());
+        dos.writeInt(localDate.getMonth().getValue());
+    }
+
+    private LocalDate readLocalDate(DataInputStream dis) throws IOException {
+        return LocalDate.of(dis.readInt(), dis.readInt(), 1);
     }
 
     @Override
@@ -69,19 +69,64 @@ public class DataStreamSerializer implements StreamSerializer {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            int size = dis.readInt();
-            for (int i = 0; i < size; i++) {
-                resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
-            //TODO implements sections
+            readElements(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            readElements(dis, () -> {
+                SectionType sectionType = SectionType.valueOf(dis.readUTF());
+                switch (sectionType) {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        resume.addSection(sectionType, new TextSection(dis.readUTF()));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        resume.addSection(sectionType, new ListSection(readCollection(dis, dis::readUTF)));
+                        break;
+                    case EXPERIENCE:
+                    case EDUCATION:
+                        resume.addSection(sectionType, new CompanySection(readCollection(dis, () -> new Company(
+                                dis.readUTF(), dis.readUTF(), readCollection(dis, () -> new Period(dis.readUTF(), dis.readUTF(),
+                                readLocalDate(dis), readLocalDate(dis)))
+                        ))));
+                        break;
+                }
+            });
             return resume;
         }
     }
-    private <T> void writeCollection(DataOutputStream dos, Collection<T> collection) throws IOException {
+
+    private interface CollectionWriter<T> {
+        void write(T t) throws IOException;
+    }
+
+    private interface CollectionReader<T> {
+        T read() throws IOException;
+    }
+
+    private interface ElementReader {
+        void readElement() throws IOException;
+    }
+
+    private void readElements(DataInputStream dis, ElementReader reader) throws IOException {
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            reader.readElement();
+        }
+    }
+
+    private <T> void writeCollection(DataOutputStream dos, Collection<T> collection, CollectionWriter<T> writer) throws IOException {
         dos.writeInt(collection.size());
         for (T item :
                 collection) {
-
+            writer.write(item);
         }
+    }
+
+    private <T> List<T> readCollection(DataInputStream dis, CollectionReader<T> reader) throws IOException {
+        int size = dis.readInt();
+        List<T> list = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            list.add(reader.read());
+        }
+        return list;
     }
 }
