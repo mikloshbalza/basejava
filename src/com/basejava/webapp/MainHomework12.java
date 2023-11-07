@@ -3,6 +3,7 @@ package com.basejava.webapp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,7 +39,11 @@ public class MainHomework12 {
 
     public List<Integer> oddOrEven(List<Integer> integers) {
         return integers.stream().reduce(0, Integer::sum) % 2 == 0 ?
-                integers.stream().filter(p -> p % 2 != 0).collect(Collectors.toList()) :
-                integers.stream().filter(p -> p % 2 == 0).collect(Collectors.toList());
+                getCollect(integers, p -> p % 2 != 0) :
+                getCollect(integers,p -> p % 2 == 0);
+    }
+
+    private List<Integer> getCollect(List<Integer> integers, Predicate <Integer> predicate) {
+        return integers.stream().filter(predicate).collect(Collectors.toList());
     }
 }
