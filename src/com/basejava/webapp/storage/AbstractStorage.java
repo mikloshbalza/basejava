@@ -14,7 +14,7 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     protected static final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid);
 
-    protected static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
+    private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
 
     protected abstract SK getSearchKey(String uuid);
 
@@ -32,22 +32,26 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     @Override
     public void save(Resume r) {
+        LOG.info("Save " + r);
         doSave(r, getNotExistingSearchKey(r.getUuid()));
     }
 
 
     @Override
     public void update(Resume r) {
+        LOG.info("Update " + r);
         doUpdate(r, getExistingSearchKey(r.getUuid()));
     }
 
     @Override
     public Resume get(String uuid) {
+        LOG.info("Get " + uuid);
         return doGet(getExistingSearchKey(uuid));
     }
 
     @Override
     public void delete(String uuid) {
+        LOG.info("Delete " + uuid);
         doDelete(getExistingSearchKey(uuid));
     }
 
@@ -55,6 +59,7 @@ public abstract class AbstractStorage<SK> implements Storage {
     protected SK getExistingSearchKey(String uuid) {
         SK searchKey = getSearchKey(uuid);
         if (!isExist(searchKey)) {
+            LOG.warning("Resume " + uuid + " not exist");
             throw new NotExistStorageException("Resume with uuid: " + uuid + " doesn't exist.");
         } else {
             return searchKey;
@@ -65,6 +70,7 @@ public abstract class AbstractStorage<SK> implements Storage {
     protected SK getNotExistingSearchKey(String uuid) {
         SK searchKey = getSearchKey(uuid);
         if (isExist(searchKey)) {
+            LOG.warning("Resume " + uuid + " already exist");
             throw new ExistStorageException("Resume with uuid: " + uuid + " already exist.");
         } else {
             return searchKey;
@@ -73,6 +79,7 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
+        LOG.info("getAllSorted");
         List<Resume> list = doCopyAll();
         list.sort(RESUME_COMPARATOR);
         return list;

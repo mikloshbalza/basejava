@@ -1,5 +1,6 @@
 package com.basejava.webapp.storage;
 
+import com.basejava.webapp.Config;
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.*;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractStorageTest {
-    protected static final File STORAGE_DIR = new File("C:\\Users\\tkach\\Desktop\\java\\startjava\\basejava\\storage");
+    protected static final File STORAGE_DIR = Config.getInstance().getStorageDir();
     protected final Storage storage;
     private static final String UUID_1 = "1";
     private static final String UUID_2 = "2";
@@ -38,7 +39,7 @@ public abstract class AbstractStorageTest {
         RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
         RESUME_4 = new Resume(UUID_4, FULL_NAME_4);
 
-        RESUME_1.addContact(ContactType.EMAIL, "mail1@ya.ru");
+        /*RESUME_1.addContact(ContactType.EMAIL, "mail1@ya.ru");
         RESUME_1.addContact(ContactType.NUMBER, "11111");
         RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
         RESUME_1.addSection(SectionType.PERSONAL, new TextSection("Personal data"));
@@ -60,7 +61,7 @@ public abstract class AbstractStorageTest {
         RESUME_1.addSection(SectionType.EXPERIENCE,
                 new CompanySection(
                         new Company("http://company2.ru","Company2",
-                                new Period("position1","content1",2015,Month.JANUARY))));
+                                new Period("position1","content1",2015,Month.JANUARY))));*/
     }
 
     protected AbstractStorageTest(Storage storage) {
