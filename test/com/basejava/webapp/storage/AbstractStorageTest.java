@@ -13,15 +13,16 @@ import java.io.File;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.getInstance().getStorageDir();
     protected final Storage storage;
-    private static final String UUID_1 = "1";
-    private static final String UUID_2 = "2";
-    protected static final String UUID_3 = "3";
-    private static final String UUID_4 = "4";
-    private static final String UUID_5 = "5";
+    private static final String UUID_1 = String.valueOf(UUID.randomUUID());
+    private static final String UUID_2 = String.valueOf(UUID.randomUUID());
+    protected static final String UUID_3 = String.valueOf(UUID.randomUUID());
+    private static final String UUID_4 = String.valueOf(UUID.randomUUID());
+    private static final String UUID_5 = String.valueOf(UUID.randomUUID());
     private static final Resume RESUME_1;
     private static final Resume RESUME_2;
     protected static final Resume RESUME_3;
@@ -109,7 +110,7 @@ public abstract class AbstractStorageTest {
     public void update() {
         storage.update(RESUME_3);
 //        Assert.assertSame(RESUME_3, storage.get(UUID_3));
-        Assert.assertTrue(RESUME_3.equals(storage.get(UUID_3)));
+        Assert.assertEquals(RESUME_3, storage.get(UUID_3));
     }
 
     @Test(expected = NotExistStorageException.class)

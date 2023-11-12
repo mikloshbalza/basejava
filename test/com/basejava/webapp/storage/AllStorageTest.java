@@ -1,6 +1,5 @@
 package com.basejava.webapp.storage;
 
-import com.basejava.webapp.storage.serializtion.JsonStreamSerializer;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
