@@ -1,8 +1,7 @@
-package com.basejava.webapp.util;
+package com.basejava.webapp.sql;
 
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.StorageException;
-import com.basejava.webapp.sql.ConnectionFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,16 +14,30 @@ public class SqlHelper {
         this.connectionFactory = connectionFactory;
     }
 
-    public <T> T connect(String sql, SqlExecutor<T> sqlExecutor) {
+    public <T> T execute(String sql, SqlExecutor<T> sqlExecutor) {
         try (Connection connection = this.connectionFactory.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             return sqlExecutor.execute(preparedStatement);
         } catch (SQLException e) {
-            //System.out.println(e.getSQLState());
-            if (e.getSQLState().equals("23505")){
-                throw new ExistStorageException(null);
+            throw ExceptionUtil.convertException(e);
+
+        }
+    }
+
+    public <T> T transactionalExecute(SqlTransaction<T> executor) {
+        try (Connection connection = connectionFactory.getConnection()) {
+            try {
+                connection.setAutoCommit(false);
+                T res = executor.execute(connection);
+                connection.commit();
+                return res;
+            } catch (SQLException e) {
+                connection.rollback();
+                throw ExceptionUtil.convertException(e);
             }
+        } catch (SQLException e) {
             throw new StorageException(e);
         }
     }
+
 }

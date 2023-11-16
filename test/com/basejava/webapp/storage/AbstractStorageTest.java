@@ -11,9 +11,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.getInstance().getStorageDir();
@@ -40,9 +38,12 @@ public abstract class AbstractStorageTest {
         RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
         RESUME_4 = new Resume(UUID_4, FULL_NAME_4);
 
-        /*RESUME_1.addContact(ContactType.EMAIL, "mail1@ya.ru");
+        RESUME_1.addContact(ContactType.EMAIL, "mail1@ya.ru");
         RESUME_1.addContact(ContactType.NUMBER, "11111");
-        RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
+
+        RESUME_4.addContact(ContactType.NUMBER, "4444");
+        RESUME_4.addContact(ContactType.SKYPE,"Skype");
+        /*RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
         RESUME_1.addSection(SectionType.PERSONAL, new TextSection("Personal data"));
         RESUME_1.addSection(SectionType.ACHIEVEMENT, new ListSection("Achivement1", "Achivement12", "Achivement13"));
         RESUME_1.addSection(SectionType.QUALIFICATIONS, new ListSection("Java", "SQL", "JavaScript"));
@@ -108,9 +109,12 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        storage.update(RESUME_3);
-//        Assert.assertSame(RESUME_3, storage.get(UUID_3));
-        Assert.assertEquals(RESUME_3, storage.get(UUID_3));
+        Resume newResume = new Resume(UUID_1, "New Name");
+        newResume.addContact(ContactType.EMAIL, "new_mail@google.com");
+        newResume.addContact(ContactType.SKYPE, "new skype");
+        newResume.addContact(ContactType.NUMBER, "new number");
+        storage.update(newResume);
+        Assert.assertTrue(newResume.equals(storage.get(UUID_1)));
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -129,11 +133,13 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getAllSorted() {
-        List<Resume> actual = new ArrayList<>();
-        actual.add(RESUME_1);
-        actual.add(RESUME_2);
-        actual.add(RESUME_3);
-        Assert.assertEquals(actual, storage.getAllSorted());
+        List<Resume> list = storage.getAllSorted();
+        Assert.assertEquals(3, list.size());
+        List<Resume> sortedResumes = Arrays.asList(RESUME_1,RESUME_2,RESUME_3);
+        Collections.sort(sortedResumes);
+        System.out.println(list);
+        System.out.println(sortedResumes);
+        Assert.assertEquals(sortedResumes, list);
     }
 
     @Test
