@@ -3,6 +3,7 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.ContactType;
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.sql.ExceptionUtil;
 import com.basejava.webapp.sql.SqlHelper;
 
 import java.sql.*;
@@ -59,23 +60,28 @@ public class SqlStorage implements Storage {
                     throw new NotExistStorageException(r.getUuid());
                 }
             }
-            sqlHelper.execute("DELETE FROM contact WHERE resume_uuid=?", preparedStatement -> {
-                preparedStatement.setString(1, r.getUuid());
-                preparedStatement.execute();
-                return null;
-            });
+            deleteContacts(r, connection);
             insertContact(r, connection);
             return null;
         });
     }
 
+    private void deleteContacts(Resume r, Connection connection) {
+        try(PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM contact WHERE resume_uuid=?")){
+            preparedStatement.setString(1, r.getUuid());
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            throw ExceptionUtil.convertException(e);
+        }
+    }
+
     @Override
     public Resume get(String uuid) {
         return sqlHelper.execute("" +
-                        "SELECT * FROM resume r\n" +
-                        "  LEFT JOIN contact c\n" +
-                        "    ON r.uuid = c.resume_uuid\n" +
-                        " WHERE r.uuid =?",
+                        " SELECT * FROM resume r " +
+                        " LEFT JOIN contact c " +
+                        " ON r.uuid = c.resume_uuid " +
+                        " WHERE r.uuid =? ",
                 preparedStatement -> {
                     preparedStatement.setString(1, uuid);
                     preparedStatement.execute();
@@ -112,9 +118,10 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         return sqlHelper.execute("" +
-                "SELECT * FROM resume r\n" +
-                "LEFT JOIN contact c ON r.uuid = c.resume_uuid\n" +
-                "ORDER BY full_name,uuid", preparedStatement -> {
+                " SELECT * FROM resume r " +
+                " LEFT JOIN contact c " +
+                " ON r.uuid = c.resume_uuid " +
+                " ORDER BY full_name,uuid", preparedStatement -> {
             ResultSet resultSet = preparedStatement.executeQuery();
             Map<String, Resume> map = new LinkedHashMap<>();
             while (resultSet.next()) {
