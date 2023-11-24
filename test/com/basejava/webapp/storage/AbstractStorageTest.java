@@ -43,11 +43,11 @@ public abstract class AbstractStorageTest {
 
         RESUME_4.addContact(ContactType.NUMBER, "4444");
         RESUME_4.addContact(ContactType.SKYPE,"Skype");
-        /*RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
+        RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
         RESUME_1.addSection(SectionType.PERSONAL, new TextSection("Personal data"));
         RESUME_1.addSection(SectionType.ACHIEVEMENT, new ListSection("Achivement1", "Achivement12", "Achivement13"));
         RESUME_1.addSection(SectionType.QUALIFICATIONS, new ListSection("Java", "SQL", "JavaScript"));
-        RESUME_1.addSection(SectionType.EXPERIENCE,
+        /*RESUME_1.addSection(SectionType.EXPERIENCE,
                 new CompanySection(
                         new Company("http://Organization11.ru", "Organization11",
                                 new Period("position1", "content1", 2005, Month.JANUARY),
