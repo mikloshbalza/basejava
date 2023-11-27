@@ -11,7 +11,7 @@ import java.nio.file.Files;
 import java.util.Properties;
 
 public class Config {
-    protected static final File PROPS = new File(".\\config\\resumes.properties");
+    protected static final File PROPS = new File("C:\\Users\\tkach\\Desktop\\java\\startjava\\basejava\\config\\resumes.properties");
     private static final Config OUR_INSTANCE = new Config();
     private final File storageDir;
     private final Storage storage;
