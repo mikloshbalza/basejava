@@ -14,13 +14,13 @@ public class ResumeServlet extends HttpServlet {
     private Storage storage;
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        request.setCharacterEncoding("UTF-8");
-//        response.setCharacterEncoding("UTF-8");
-//        response.setContentType("text/html; charset=UTF-8");
-//        String name = request.getParameter("name");
-//        response.getWriter().write(name == null ? "Hello Resumes!" : "Hello " + name + '!');
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
         storage = Config.getInstance().getStorage();
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Resume> resumes = storage.getAllSorted();
         request.setAttribute("uuid1", resumes.get(0).getUuid());
         request.setAttribute("uuid2", resumes.get(1).getUuid());
