@@ -1,7 +1,7 @@
 package com.basejava.webapp.web;
 
 import com.basejava.webapp.Config;
-import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.model.*;
 import com.basejava.webapp.storage.SqlStorage;
 import com.basejava.webapp.storage.Storage;
 
@@ -21,18 +21,76 @@ public class ResumeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Resume> resumes = storage.getAllSorted();
-        request.setAttribute("uuid1", resumes.get(0).getUuid());
-        request.setAttribute("uuid2", resumes.get(1).getUuid());
-        request.setAttribute("uuid3", resumes.get(2).getUuid());
-        request.setAttribute("full_name1", resumes.get(0).getFullName());
-        request.setAttribute("full_name2", resumes.get(1).getFullName());
-        request.setAttribute("full_name3", resumes.get(2).getFullName());
-        request.getRequestDispatcher("page.jsp").forward(request, response);
+        String uuid = request.getParameter("uuid");
+        String action = request.getParameter("action");
+        if (action == null) {
+            request.setAttribute("resumes", storage.getAllSorted());
+            request.getRequestDispatcher("/WEB-INF/jsp/page.jsp").forward(request, response);
+            return;
+        }
+        Resume r;
+        switch (action) {
+            case "delete":
+                storage.delete(uuid);
+                response.sendRedirect("resume");
+                return;
+            case "view":
+            case "edit":
+                r = storage.get(uuid);
+                break;
+            default:
+                throw new IllegalArgumentException("Action " + action + " is illegal");
+        }
+
+        request.setAttribute("resume", r);
+        request.getRequestDispatcher(
+                ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
+        ).forward(request, response);
+
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        String uuid = request.getParameter("uuid");
+        String fullName = request.getParameter("fullName");
 
+        boolean isExist = uuid != null;
+        Resume r;
+        if (isExist){
+            r = storage.get(uuid);
+            r.setFullName(fullName);
+        } else {
+            r = new Resume(fullName);
+        }
+        
+        for (ContactType type : ContactType.values()) {
+            String value = request.getParameter(type.name());
+            if (value != null && value.trim().length() != 0) {
+                r.addContact(type, value);
+            } else {
+                r.getContacts().remove(type);
+            }
+        }
+        for (SectionType type : SectionType.values()) {
+            String value = request.getParameter(type.name());
+            String[] values = request.getParameterValues(type.name());
+            if (value != null && value.trim().length() != 0&& values.length < 2){
+                r.getSections().remove(type);
+            } else {
+                switch (type){
+                    case OBJECTIVE:
+                    case PERSONAL:
+                        r.addSection(type, new TextSection(value));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        r.addSection(type, new ListSection(value.split("\\n")));
+                        break;
+                }
+            }
+        }
+        storage.update(r);
+        response.sendRedirect("resume");
     }
 }
