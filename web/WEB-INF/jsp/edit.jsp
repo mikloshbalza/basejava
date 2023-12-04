@@ -31,26 +31,26 @@
         </p>
         <hr>
         <c:forEach var="type" items="<%=SectionType.values()%>">
-            <c:set var="section" value="${resume.getSection(type)}"/>
+            <c:set var="section" value="${resume.getSection(type.toString())}"/>
             <jsp:useBean id="section" type="com.basejava.webapp.model.AbstractSection"/>
             <h2><a>${type.title}</a></h2>
             <c:choose>
                 <c:when test="${type=='OBJECTIVE'}">
-                    <input type="text" name="${type}" size="100" value="<%=section%>>">
+                    <input type="text" name="${type}" size="100" value="<%=section%>">
                 </c:when>
                 <c:when test="${type=='PERSONAL'}">
                     <textarea name="${type}" cols="100" rows="5"><%=section%></textarea>
                 </c:when>
                 <c:when test="${type=='QUALIFICATIONS' || type=='ACHIEVEMENT'}">
-                    <textarea name="${type}" cols="100" rows="5">
-
-                    </textarea>
+                    <textarea name="${type}" cols="100" rows="5"><%=String.join("\n",((ListSection)section).getList())%></textarea>
+                </c:when>
+                <c:when test="${type=='EXPERIENCE' || type=='EDUCATION'}">
 
                 </c:when>
             </c:choose>
         </c:forEach>
         <button type="submit">Сохранить</button>
-        <button onclick="window.history.back()">Отменить</button>
+        <button type="reset" onclick="window.history.back()">Отменить</button>
     </form>
 </section>
 <jsp:include page="fragments/footer.jsp"/>

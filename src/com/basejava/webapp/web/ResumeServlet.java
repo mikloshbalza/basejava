@@ -55,15 +55,15 @@ public class ResumeServlet extends HttpServlet {
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
 
-        boolean isExist = uuid != null;
+        boolean isExist = (uuid != null || uuid.length() != 0);
         Resume r;
-        if (isExist){
+        if (isExist) {
             r = storage.get(uuid);
             r.setFullName(fullName);
         } else {
             r = new Resume(fullName);
         }
-        
+
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
@@ -75,10 +75,10 @@ public class ResumeServlet extends HttpServlet {
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name());
             String[] values = request.getParameterValues(type.name());
-            if (value != null && value.trim().length() != 0&& values.length < 2){
-                r.getSections().remove(type);
-            } else {
-                switch (type){
+//            if ((value == null || value.trim().length() == 0)) {
+//                r.getSections().remove(type);
+//            } else {
+                switch (type) {
                     case OBJECTIVE:
                     case PERSONAL:
                         r.addSection(type, new TextSection(value));
@@ -87,10 +87,18 @@ public class ResumeServlet extends HttpServlet {
                     case QUALIFICATIONS:
                         r.addSection(type, new ListSection(value.split("\\n")));
                         break;
+                    case EDUCATION:
+                    case EXPERIENCE:
+                        r.addSection(type, new CompanySection());
                 }
-            }
+//            }
         }
-        storage.update(r);
+        if (isExist){
+            storage.update(r);
+        } else {
+            storage.save(r);
+        }
+
         response.sendRedirect("resume");
     }
 }
