@@ -15,6 +15,7 @@ import static com.basejava.webapp.util.DateUtil.of;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Period implements Serializable {
+    public static final Period EMPTY = new Period();
     private String name;
     private String description;
     @XmlJavaTypeAdapter(LocalDateAdapter.class)

@@ -11,6 +11,7 @@ import java.util.Objects;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Company implements Serializable {
     private static final long serialVersionUID = 1L;
+    public static final Company EMPTY = new Company("","",Period.EMPTY);
     private String url;
     private String name;
     private List<Period> periods;
@@ -20,6 +21,11 @@ public class Company implements Serializable {
 
     public Company(String url, String name,Period... periods){
         this(url, name, Arrays.asList(periods));
+    }
+
+    public Company(String url, List<Period> periods){
+        this.url = url;
+        this.periods = periods;
     }
     public Company(String url, String name, List<Period> periods) {
         Objects.requireNonNull(url, "url must not be null");
